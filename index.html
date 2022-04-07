@@ -215,6 +215,14 @@
         sendChannel.send("-up");
       }
 
+      let inFlight = false;
+
+      function toggleFlight() {
+        inFlight = !inFlight;
+        if (inFlight) sendChannel.send('=takeoff');
+        if (!inFlight) sendChannel.send('=land');
+      }
+
       window.addEventListener('deviceorientation', handleOrientation);
     </script>
   </body>
