@@ -215,6 +215,11 @@
         KeyA: "1flip",
         KeyD: "3flip",
       };
+      let rot = {
+        alpha: 0,
+        beta: 0,
+        gamma: 0
+      }
       document.addEventListener("keyup", function (event) {
         let e = controls[event.code];
         if (!e) {
@@ -243,6 +248,46 @@
       function land() {
         sendChannel.send("=land");
       }
+
+      function handleOrientation(event) {
+        if (offset.alpha == 0 && offset.beta == 0 && offset.gamma == 0) {
+          offset = {
+            alpha: event.alpha,
+            beta: event.beta,
+            gamma: event.gamma
+          }
+        }
+        let diff = {
+          alpha: offset.alpha - event.alpha,
+          beta: offset.beta - event.beta,
+          gamma: offset.gamma - event.gamma,
+        }
+
+        // Turn left-right = Alpha
+        // Left-right = Beta
+        // Forwards-backwards = Gamma
+
+        if (Math.abs(diff.gamma) > Math.abs(diff.beta) && Math.abs(diff.gamma) > Math.abs(diff.alpha)) {
+          if (diff.gamma > 10) sendChannel.send("+forwa");
+          if (diff.gamma < -10) sendChannel.send("-forwa");
+        }
+        if (Math.abs(diff.beta) > Math.abs(diff.gamma) && Math.abs(diff.beta) > Math.abs(diff.alpha)) {
+          if (diff.beta > 10) sendChannel.send("+right");
+          if (diff.beta < -10) sendChannel.send("-right");
+        }
+        if (Math.abs(diff.alpha) > Math.abs(diff.gamma) && Math.abs(diff.alpha) > Math.abs(diff.beta)) {
+          if (diff.alpha > 10) sendChannel.send("+clock");
+          if (diff.alpha < -10) sendChannel.send("-clock");
+        }
+      }
+      function up() {
+        sendChannel.send("+up");
+      }
+      function down() {
+        sendChannel.send("-up");
+      }
+
+      window.addEventListener('deviceorientation', handleOrientation);
     </script>
   </body>
 </html>
