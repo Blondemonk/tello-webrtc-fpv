@@ -223,6 +223,7 @@
         if (!inFlight) sendChannel.send('=land');
       }
 
+      document.addEventListener('click', toggleFlight);
       window.addEventListener('deviceorientation', handleOrientation);
     </script>
   </body>
